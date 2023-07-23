@@ -7,8 +7,6 @@ import 'package:selling_app/config/server_addresses.dart';
 import 'utils.dart';
 
 class UserRepositoryImpl extends UserRepository {
-  UserRepositoryImpl();
-
   @override
   Future<AppUser> signIn({
     required String email,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:selling_app/data/repositories/abstract/product_repository.dart';
 import 'package:selling_app/data/repositories/abstract/user_repository.dart';
 import 'package:selling_app/presentation/features/authentication/authentication_bloc.dart';
-import 'package:selling_app/presentation/features/login/bloc/login_bloc.dart';
-import 'package:selling_app/presentation/features/login/bloc/login_screen.dart';
+import 'package:selling_app/presentation/features/login/login_bloc.dart';
+import 'package:selling_app/presentation/features/login/login_screen.dart';
 import 'package:selling_app/presentation/features/product/product_screen.dart';
+import 'package:selling_app/presentation/features/product/products_bloc.dart';
 import 'package:selling_app/presentation/features/splash_screen.dart';
 import 'config/routes.dart';
 import 'locator.dart' as service_locator;
@@ -24,30 +26,17 @@ class SimpleBlocDelegate extends BlocObserver {
     super.onError(bloc, error, stacktrace);
     print(error);
   }
-
-  @override
-  void onChange(BlocBase bloc, Change change) {
-    super.onChange(bloc, change);
-    print(change);
-  }
-
-  @override
-  void onCreate(BlocBase bloc) {
-    super.onCreate(bloc);
-    print('conCreate');
-    print(bloc);
-  }
 }
 
 void main() {
   service_locator.init();
   Bloc.observer = SimpleBlocDelegate();
-  print('main');
 
   runApp(BlocProvider<AuthenticationBloc>(
     create: (context) => AuthenticationBloc()..add(AppStarted()),
     child: MultiRepositoryProvider(providers: [
-      RepositoryProvider<UserRepository>(create: (context) => sl())
+      RepositoryProvider<UserRepository>(create: (context) => sl()),
+      RepositoryProvider<ProductRepository>(create: (context) => sl())
     ], child: const MyApp()),
   ));
 }
@@ -78,7 +67,7 @@ class MyApp extends StatelessWidget {
               builder: (context, state) {
             print(state);
             if (state is Authenticated) {
-              return ProductScreen(); //TODO profile properties should be here
+              return _buildProductsBloc();
             } else if (state is Unauthenticated) {
               return _buildSignInBloc();
             } else {
@@ -88,13 +77,21 @@ class MyApp extends StatelessWidget {
     };
   }
 
+  BlocProvider<ProductsBloc> _buildProductsBloc() {
+    return BlocProvider<ProductsBloc>(
+      create: (context) => ProductsBloc(
+          productRepository: RepositoryProvider.of<ProductRepository>(context)),
+      child: const ProductScreen(),
+    );
+  }
+
   BlocProvider<LoginBloc> _buildSignInBloc() {
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(
         userRepository: RepositoryProvider.of<UserRepository>(context),
         authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
       ),
-      child: LoginScreen(),
+      child: const LoginScreen(),
     );
   }
 
