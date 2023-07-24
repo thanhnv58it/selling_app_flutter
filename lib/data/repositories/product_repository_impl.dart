@@ -14,7 +14,29 @@ class ProductRepositoryImpl extends ProductRepository {
 
     var response = await http.get(route);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    print(jsonResponse);
+    if (response.statusCode != 200) {
+      throw jsonResponse['message'];
+    }
+    return SearchProduct.fromJson(jsonResponse);
+  }
+
+  @override
+  Future<List<String>> getAllProductsCategories() async {
+    var route = HttpClient().createUri(ServerAddresses.categoriesPath);
+    var response = await http.get(route);
+    List<dynamic> list = json.decode(response.body);
+    List<String> categoriesList = List<String>.from(list);
+    return categoriesList;
+  }
+
+  @override
+  Future<SearchProduct> getProductsByCategory(
+      {required String category}) async {
+    var route = HttpClient()
+        .createUri(ServerAddresses.getProductsByCategoryPath(category));
+
+    var response = await http.get(route);
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
     if (response.statusCode != 200) {
       throw jsonResponse['message'];
     }

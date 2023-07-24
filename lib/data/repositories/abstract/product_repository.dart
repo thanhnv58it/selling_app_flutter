@@ -6,4 +6,10 @@ abstract class ProductRepository {
   Future<SearchProduct> searchProduct({
     required String keyword,
   });
+
+  Future<List<String>> getAllProductsCategories();
+
+  Future<SearchProduct> getProductsByCategory({
+    required String category,
+  });
 }

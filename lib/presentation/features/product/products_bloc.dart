@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:selling_app/data/model/product.dart';
 import 'package:selling_app/data/model/search_product.dart';
 import 'package:selling_app/data/repositories/abstract/product_repository.dart';
-import 'package:selling_app/data/repositories/abstract/user_repository.dart';
 
 part 'products_event.dart';
 part 'products_state.dart';
@@ -10,8 +10,53 @@ part 'products_state.dart';
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   final ProductRepository productRepository;
 
-  ProductsBloc({required this.productRepository}) : super(ProductInitial()) {
+  String _selectedCategory = "";
+  List<String> _categories = [];
+  List<Product> _products = [];
+
+  ProductsBloc({required this.productRepository}) : super(ApiInitial()) {
+    on<FetchDataEvent>(fetchCatagories);
+    on<CategorySelectedEvent>(onCategorySelectedEvent);
     on<SearchPressed>(searchPressed);
+  }
+
+  Future<void> fetchCatagories(
+      FetchDataEvent event, Emitter<ProductsState> emit) async {
+    emit(ApiInitial());
+    try {
+      var result = await productRepository.getAllProductsCategories();
+      _categories = result;
+      _selectedCategory = result.first;
+      emit(CategoriesLoaded(result, _selectedCategory));
+      await fetchProductsByCatagory(event, emit);
+    } catch (error) {
+      emit(LoadDataError(error.toString()));
+    }
+  }
+
+  Future<void> fetchProductsByCatagory(
+      FetchDataEvent event, Emitter<ProductsState> emit) async {
+    try {
+      var result = await productRepository.getProductsByCategory(
+          category: _selectedCategory);
+      emit(ProductsByCategoryLoaded(
+          _selectedCategory, _categories, result.products));
+    } catch (error) {
+      emit(LoadDataError(error.toString()));
+    }
+  }
+
+  Future<void> onCategorySelectedEvent(
+      CategorySelectedEvent event, Emitter<ProductsState> emit) async {
+    try {
+      _selectedCategory = event.category;
+      var result = await productRepository.getProductsByCategory(
+          category: _selectedCategory);
+      emit(ProductsByCategoryLoaded(
+          _selectedCategory, _categories, result.products));
+    } catch (error) {
+      emit(LoadDataError(error.toString()));
+    }
   }
 
   Future<void> searchPressed(
@@ -22,7 +67,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           await productRepository.searchProduct(keyword: event.keyword);
       emit(SearchedProducts(result));
     } catch (error) {
-      emit(SearchingProductsError(error.toString()));
+      emit(LoadDataError(error.toString()));
     }
   }
 }

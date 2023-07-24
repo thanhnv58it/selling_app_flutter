@@ -80,7 +80,8 @@ class MyApp extends StatelessWidget {
   BlocProvider<ProductsBloc> _buildProductsBloc() {
     return BlocProvider<ProductsBloc>(
       create: (context) => ProductsBloc(
-          productRepository: RepositoryProvider.of<ProductRepository>(context)),
+          productRepository: RepositoryProvider.of<ProductRepository>(context))
+        ..add(FetchDataEvent()),
       child: const ProductScreen(),
     );
   }

@@ -7,7 +7,29 @@ abstract class ProductsState extends Equatable {
   List<Object> get props => [];
 }
 
-class ProductInitial extends ProductsState {}
+class ApiInitial extends ProductsState {}
+
+class CategoriesLoaded extends ProductsState {
+  final List<String> categories;
+  final String selectedCategory;
+
+  const CategoriesLoaded(this.categories, this.selectedCategory);
+
+  @override
+  List<Object> get props => [categories, selectedCategory];
+}
+
+class ProductsByCategoryLoaded extends ProductsState {
+  final List<String> categories;
+  final String selectedCategory;
+  final List<Product> products;
+
+  const ProductsByCategoryLoaded(
+      this.selectedCategory, this.categories, this.products);
+
+  @override
+  List<Object> get props => [products, categories, selectedCategory];
+}
 
 class SearchingProducts extends ProductsState {}
 
@@ -20,10 +42,10 @@ class SearchedProducts extends ProductsState {
   List<Object> get props => [result];
 }
 
-class SearchingProductsError extends ProductsState {
+class LoadDataError extends ProductsState {
   final String error;
 
-  const SearchingProductsError(this.error);
+  const LoadDataError(this.error);
 
   @override
   List<Object> get props => [error];

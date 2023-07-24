@@ -7,6 +7,19 @@ abstract class ProductsEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class FetchDataEvent extends ProductsEvent {}
+
+class FetchProductsEvent extends ProductsEvent {}
+
+class CategorySelectedEvent extends ProductsEvent {
+  final String category;
+
+  const CategorySelectedEvent(this.category);
+
+  @override
+  List<Object> get props => [category];
+}
+
 class SearchPressed extends ProductsEvent {
   final String keyword;
 
