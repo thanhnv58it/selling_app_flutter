@@ -4,7 +4,7 @@ import 'package:selling_app/config/storage.dart';
 class HttpClient {
   Map createHeader() {
     var header = <String, String>{
-      'authorization': 'Bearer ' + Storage().token,
+      'authorization': 'Bearer ${Storage().token}',
     };
     return header;
   }

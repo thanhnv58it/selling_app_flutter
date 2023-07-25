@@ -27,7 +27,7 @@ class OpenFlutterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _theme = Theme.of(context);
+    var theme = Theme.of(context);
     EdgeInsetsGeometry edgeInsets = const EdgeInsets.all(0);
     if (width == null || height == null) {
       edgeInsets = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0);
@@ -56,8 +56,8 @@ class OpenFlutterButton extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                _buildIcon(_theme),
-                _buildTitle(_theme),
+                _buildIcon(theme),
+                _buildTitle(theme),
               ],
             ),
           ),

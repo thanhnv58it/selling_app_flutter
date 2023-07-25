@@ -13,11 +13,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     required this.userRepository,
     required this.authenticationBloc,
   }) : super(LoginInitial()) {
-    on<LoginPressed>(loginPressed);
+    on<LoginPressedEvent>(loginPressed);
   }
 
   Future<void> loginPressed(
-      LoginPressed event, Emitter<LoginState> emit) async {
+      LoginPressedEvent event, Emitter<LoginState> emit) async {
     emit(LoginProcessingState());
     try {
       var result = await userRepository.signIn(

@@ -17,7 +17,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   ProductsBloc({required this.productRepository}) : super(ApiInitial()) {
     on<FetchDataEvent>(fetchCatagories);
     on<CategorySelectedEvent>(onCategorySelectedEvent);
-    on<SearchPressed>(searchPressed);
+    on<SearchPressedEvent>(searchPressed);
+    on<ClearSearchQueryEvent>(clearSearchQuery);
   }
 
   Future<void> fetchCatagories(
@@ -39,8 +40,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     try {
       var result = await productRepository.getProductsByCategory(
           category: _selectedCategory);
-      emit(ProductsByCategoryLoaded(
-          _selectedCategory, _categories, result.products));
+      _products = result.products;
+      emit(ProductsByCategoryLoaded(_selectedCategory, _categories, _products));
     } catch (error) {
       emit(LoadDataError(error.toString()));
     }
@@ -50,18 +51,19 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       CategorySelectedEvent event, Emitter<ProductsState> emit) async {
     try {
       _selectedCategory = event.category;
+      emit(CategoriesLoaded(_categories, _selectedCategory));
       var result = await productRepository.getProductsByCategory(
           category: _selectedCategory);
-      emit(ProductsByCategoryLoaded(
-          _selectedCategory, _categories, result.products));
+      _products = result.products;
+      emit(ProductsByCategoryLoaded(_selectedCategory, _categories, _products));
     } catch (error) {
       emit(LoadDataError(error.toString()));
     }
   }
 
   Future<void> searchPressed(
-      SearchPressed event, Emitter<ProductsState> emit) async {
-    emit(SearchingProducts());
+      SearchPressedEvent event, Emitter<ProductsState> emit) async {
+    emit(ApiInitial());
     try {
       var result =
           await productRepository.searchProduct(keyword: event.keyword);
@@ -69,5 +71,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     } catch (error) {
       emit(LoadDataError(error.toString()));
     }
+  }
+
+  Future<void> clearSearchQuery(
+      ClearSearchQueryEvent event, Emitter<ProductsState> emit) async {
+    emit(ProductsByCategoryLoaded(_selectedCategory, _categories, _products));
   }
 }

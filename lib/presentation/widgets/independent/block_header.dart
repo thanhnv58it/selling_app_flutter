@@ -18,7 +18,7 @@ class OpenFlutterBlockHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _theme = Theme.of(context);
+    var theme = Theme.of(context);
     const rightLinkWidth = 100.0;
     return InkWell(
       onTap: onLinkTap,
@@ -32,7 +32,7 @@ class OpenFlutterBlockHeader extends StatelessWidget {
               children: <Widget>[
                 SizedBox(
                   width: width - rightLinkWidth,
-                  child: Text(title, style: _theme.textTheme.headlineLarge),
+                  child: Text(title, style: theme.textTheme.headlineLarge),
                 ),
                 linkText != null
                     ? SizedBox(
@@ -40,7 +40,7 @@ class OpenFlutterBlockHeader extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(linkText!,
-                              style: _theme.textTheme.bodyMedium),
+                              style: theme.textTheme.bodyMedium),
                         ),
                       )
                     : Container(),
@@ -49,7 +49,7 @@ class OpenFlutterBlockHeader extends StatelessWidget {
             description != null
                 ? Text(
                     description!,
-                    style: _theme.textTheme.bodyMedium,
+                    style: theme.textTheme.bodyMedium,
                   )
                 : Container()
           ],

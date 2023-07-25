@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     BlocProvider.of<LoginBloc>(context).add(
-      LoginPressed(
+      LoginPressedEvent(
         email: emailController.text,
         password: passwordController.text,
       ),

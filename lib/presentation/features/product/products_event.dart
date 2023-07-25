@@ -9,8 +9,6 @@ abstract class ProductsEvent extends Equatable {
 
 class FetchDataEvent extends ProductsEvent {}
 
-class FetchProductsEvent extends ProductsEvent {}
-
 class CategorySelectedEvent extends ProductsEvent {
   final String category;
 
@@ -20,11 +18,13 @@ class CategorySelectedEvent extends ProductsEvent {
   List<Object> get props => [category];
 }
 
-class SearchPressed extends ProductsEvent {
+class SearchPressedEvent extends ProductsEvent {
   final String keyword;
 
-  const SearchPressed(this.keyword);
+  const SearchPressedEvent(this.keyword);
 
   @override
   List<Object> get props => [keyword];
 }
+
+class ClearSearchQueryEvent extends ProductsEvent {}

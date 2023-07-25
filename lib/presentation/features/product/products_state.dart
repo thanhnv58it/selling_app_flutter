@@ -31,8 +31,6 @@ class ProductsByCategoryLoaded extends ProductsState {
   List<Object> get props => [products, categories, selectedCategory];
 }
 
-class SearchingProducts extends ProductsState {}
-
 class SearchedProducts extends ProductsState {
   final SearchProduct result;
 

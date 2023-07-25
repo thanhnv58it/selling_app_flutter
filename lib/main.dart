@@ -48,7 +48,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // onGenerateRoute: _registerRoutesWithParameters,
       debugShowCheckedModeBanner: false,
       title: 'Selling App',
       theme: ThemeData(
@@ -65,13 +64,12 @@ class MyApp extends StatelessWidget {
       AppRoutes.home: (context) =>
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
-            print(state);
             if (state is Authenticated) {
               return _buildProductsBloc();
             } else if (state is Unauthenticated) {
               return _buildSignInBloc();
             } else {
-              return SplashScreen();
+              return const SplashScreen();
             }
           }),
     };
@@ -94,25 +92,5 @@ class MyApp extends StatelessWidget {
       ),
       child: const LoginScreen(),
     );
-  }
-
-  Route _registerRoutesWithParameters(RouteSettings settings) {
-    if (settings.name == AppRoutes.signin) {
-      return MaterialPageRoute(
-        builder: (context) {
-          return LoginScreen();
-        },
-      );
-    } else if (settings.name == AppRoutes.productList) {
-      return MaterialPageRoute(builder: (context) {
-        return ProductScreen();
-      });
-    } else {
-      return MaterialPageRoute(
-        builder: (context) {
-          return ProductScreen();
-        },
-      );
-    }
   }
 }
